@@ -1,16 +1,16 @@
 import type { Node, XYPosition } from '@xyflow/react';
-import { yNodes, yMemos, createFeature, doc } from './yboard';
+import { yNodes, yMemos, createFeature, doc, uid } from './yboard';
 import * as Y from 'yjs';
 
 // 보드에 카드를 놓는 일은 여기 모아둔다 (패널, 기능 카드, 툴바가 같이 쓴다)
 export function addMaterialNode(materialId: number, position: XYPosition) {
-  const id = crypto.randomUUID();
+  const id = uid();
   yNodes.set(id, { id, type: 'material', position, data: { materialId } });
   return id;
 }
 
 export function addFeatureNode(title: string, position: XYPosition, folderId: number | null = null) {
-  const id = crypto.randomUUID();
+  const id = uid();
   doc.transact(() => {
     createFeature(id, title, folderId);
     yNodes.set(id, { id, type: 'feature', position, data: {} });
@@ -19,7 +19,7 @@ export function addFeatureNode(title: string, position: XYPosition, folderId: nu
 }
 
 export function addMemoNode(position: XYPosition) {
-  const id = crypto.randomUUID();
+  const id = uid();
   doc.transact(() => {
     yMemos.set(id, new Y.Text());
     yNodes.set(id, { id, type: 'memo', position, data: {} });

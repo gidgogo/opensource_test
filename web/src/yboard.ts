@@ -4,6 +4,12 @@ import { WebsocketProvider } from 'y-websocket';
 import type { Node, Edge } from '@xyflow/react';
 import { SYNC } from './config';
 
+// 고유 id. crypto.randomUUID 는 https나 localhost에서만 있어서
+// 같은 와이파이에서 http://IP:5173 으로 들어오면 없다. 그때는 직접 만든다
+export const uid = (): string =>
+  crypto.randomUUID?.() ??
+  Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
+
 // 주소의 ?board=이름 으로 보드(방)를 고른다. 없으면 'main'
 export const boardId = new URLSearchParams(location.search).get('board') ?? 'main';
 
@@ -65,7 +71,7 @@ function load(key: string, make: () => string) {
   return v;
 }
 export const me = {
-  id: load('userId', () => crypto.randomUUID()),
+  id: load('userId', () => uid()),
   name: load('name', () => `손님${Math.floor(Math.random() * 900 + 100)}`),
   color: load('color', () => COLORS[Math.floor(Math.random() * COLORS.length)]),
 };

@@ -6,12 +6,14 @@
 import { chromium } from 'playwright';
 import { writeFileSync } from 'node:fs';
 
-const URL = 'http://localhost:5173/?board=' + (process.argv[2] ?? 'test');
+const BASE = process.env.BASE ?? 'http://localhost:5173';
+const URL = BASE + '/?board=' + (process.argv[2] ?? 'test');
 const phase = process.argv[3] ?? 'build'; // build | check
 const shot = (p, n) => p.screenshot({ path: `${n}.png` }); // 결과 화면을 e2e/ 에 png로 남긴다
 const ok = (cond, msg) => { if (!cond) throw new Error('FAIL: ' + msg); console.log('  ✓', msg); };
 
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH });
+// --no-proxy-server: 회사망 프록시 등을 거치지 않고 바로 접속
+const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH, args: ['--no-proxy-server'] });
 async function user(name) {
   const ctx = await browser.newContext({ viewport: { width: 1500, height: 950 } });
   const p = await ctx.newPage();
@@ -85,7 +87,7 @@ if (phase === 'build') {
   ok(true, '폴더 이미지 업로드가 B 트리에 보임');
 
   console.log('6. Studio 수집 → 받은 자료 → 기능에 연결');
-  const send = (src) => fetch('http://localhost:8000/studio/collect', {
+  const send = (src) => fetch(BASE + '/api/studio/collect', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ items: [
       { title: 'BossAttack', kind: 'code', content: src, path: 'ServerScriptService.BossAttack', class_name: 'Script' },

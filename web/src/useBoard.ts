@@ -3,7 +3,7 @@ import {
   applyNodeChanges, applyEdgeChanges,
   type Node, type Edge, type NodeChange, type EdgeChange, type Connection,
 } from '@xyflow/react';
-import { doc, yNodes, yEdges, yFeatures, yMemos, linkMaterial } from './yboard';
+import { doc, yNodes, yEdges, yFeatures, yMemos, linkMaterial, uid } from './yboard';
 
 // Yjs에 있는 공유 내용 + 내 화면에만 있는 정보(선택 여부, 측정된 크기)를 합친다
 function merge<T extends { id: string }>(shared: T[], local: T[]): T[] {
@@ -22,7 +22,7 @@ export function removeNode(id: string) {
 
 export function addEdge(source: string, target: string) {
   for (const e of yEdges.values()) if (e.source === source && e.target === target) return;
-  const id = crypto.randomUUID();
+  const id = uid();
   yEdges.set(id, { id, source, target });
 }
 

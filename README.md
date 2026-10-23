@@ -61,7 +61,7 @@ cd web && npm install && cd ..
 
 ```bash
 # 터미널 1: 자료 서버
-cd server && .venv/bin/fastapi dev main.py --host 0.0.0.0
+cd server && .venv/bin/fastapi dev main.py
 # 터미널 2: 동기화 서버
 cd sync && npm start
 # 터미널 3: 화면
@@ -76,6 +76,28 @@ cd web && npm run dev
 - **다른 컴퓨터 (같은 와이파이)**: 서버를 켠 컴퓨터의 IP를 확인하고(`ipconfig getifaddr en0`), 친구는 `http://그IP:5173` 으로 들어옵니다. 처음에 Mac 방화벽이 물으면 허용하세요.
 - **보드 나누기**: 주소 뒤에 `?board=이름`을 붙이면 다른 보드가 됩니다. 예: `http://localhost:5173/?board=boss`
 
+### 5. 밖에 있는 팀원과 같이 쓰기 (공개 주소 열기)
+
+웹 주소(5173) 하나 뒤에 자료 서버(`/api`)와 동기화 서버(`/sync`)가 같이 붙어 있어서, **5173 하나만 밖에 열면** 됩니다.
+가장 쉬운 건 Cloudflare 무료 터널입니다. 가입이 필요 없습니다.
+
+서버 3개를 켠 컴퓨터에서 터미널을 하나 더 열고:
+
+```bash
+# 처음 한 번만: cloudflared 받기 (Intel Mac이면 arm64 를 amd64 로 바꾸세요)
+curl -L -o cloudflared.tgz https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-arm64.tgz
+tar -xzf cloudflared.tgz
+
+# 공개 주소 열기
+./cloudflared tunnel --url http://localhost:5173
+```
+
+화면에 `https://아무단어들.trycloudflare.com` 주소가 나옵니다. 그 주소를 팀원에게 보내면 어디서든 같은 보드에 들어옵니다.
+
+- 이 창을 끄면 주소도 닫히고, 다시 열 때마다 주소가 바뀝니다.
+- 주소를 아는 사람은 누구나 들어올 수 있으니 테스트할 때만 열어 두세요.
+- 팀원의 Studio 플러그인 **설정**에는 `https://그주소.trycloudflare.com/api` 를 넣으면 됩니다.
+
 ## Studio 플러그인 설치
 
 1. Studio 위쪽 **Plugins** 탭 → **Plugins Folder** 를 누르면 플러그인 폴더가 열립니다.
@@ -83,7 +105,7 @@ cd web && npm run dev
    - 또는: ServerStorage에 Script를 하나 만들고 파일 내용을 붙여넣은 뒤, 그 Script를 오른쪽 클릭 → **Save as Local Plugin**.
 3. Plugins 탭에 **협업 보드** 툴바가 생깁니다.
    - **보드로 보내기**: Explorer에서 고른 것을 보냅니다. 스크립트는 코드 그대로, Part/Model/Folder는 주요 속성(위치, 크기, 색, Attribute, 태그, 자식 목록)과 그 안의 스크립트까지 같이 보냅니다.
-   - **설정**: 서버 주소를 바꿉니다. 기본은 `http://localhost:8000` 이고, 다른 컴퓨터의 서버로 보내려면 `http://그IP:8000` 으로 바꿉니다.
+   - **설정**: 서버 주소를 바꿉니다. 기본은 `http://localhost:8000` (내 컴퓨터)이고, 다른 컴퓨터의 서버로 보내려면 `http://그IP:5173/api`, 공개 주소면 `https://그주소.trycloudflare.com/api` 로 바꿉니다.
 4. 처음 보낼 때 Studio가 "이 플러그인이 localhost에 접속해도 되나요?"라고 물으면 **허용**을 누르세요. 그래도 실패하면 Game Settings → Security → **Allow HTTP Requests** 를 켜보세요.
 
 보낸 것은 웹 오른쪽 **받은 자료**에 3초 안에 나타납니다.
@@ -124,6 +146,6 @@ npm run check               # 다 남아있는지 확인
 
 ## 아직 없는 것
 
-- 인터넷 배포와 로그인/권한 (지금은 주소를 아는 사람은 누구나 들어옴)
+- 상시 배포와 로그인/권한 (지금은 켜 둔 컴퓨터 + 터널로만 열 수 있고, 주소를 아는 사람은 누구나 들어옴)
 - GitHub 코드 연결 (C 역할)
 - Studio 안에서 보드의 결정 사항 보기 (D 역할 2단계)

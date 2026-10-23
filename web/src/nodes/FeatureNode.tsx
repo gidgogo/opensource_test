@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Handle, Position, useReactFlow, type NodeProps } from '@xyflow/react';
 import * as Y from 'yjs';
 import {
-  yFeatures, yComments, featureParts, me, usePeers, useY, doc, STATUSES,
+  yFeatures, yComments, featureParts, me, usePeers, useY, doc, STATUSES, uid,
   type Change, type Comment, type Status,
 } from '../yboard';
 import { api, fileUrl, materialLabel, useMaterial } from '../api';
@@ -82,7 +82,7 @@ function Checklist({ list }: { list: Y.Array<Y.Map<unknown>> }) {
       })}
       <AddLine placeholder="합의할 것 (예: 보스 체력 5000)" onAdd={(text) => {
         const item = new Y.Map<unknown>();
-        item.set('id', crypto.randomUUID());
+        item.set('id', uid());
         item.set('text', text);
         item.set('agreed', new Y.Map<string>());
         list.push([item]);
@@ -95,7 +95,7 @@ function Comments({ cardId }: { cardId: string }) {
   const comments = useComments(cardId);
   const [busy, setBusy] = useState(false);
   const post = (text: string, image?: string) =>
-    yComments.push([{ id: crypto.randomUUID(), cardId, authorId: me.id, author: me.name, text, image, at: Date.now() }]);
+    yComments.push([{ id: uid(), cardId, authorId: me.id, author: me.name, text, image, at: Date.now() }]);
   const attach = async (file: File) => {
     setBusy(true);
     try {
@@ -172,7 +172,7 @@ export function FeatureNode({ id, selected }: NodeProps) {
           </div>
         ))}
         <AddLine placeholder="예: 2페이즈에 돌진 공격 추가" onAdd={(text) =>
-          changes.push([{ id: crypto.randomUUID(), text, author: me.name, at: Date.now() }])} />
+          changes.push([{ id: uid(), text, author: me.name, at: Date.now() }])} />
       </section>
 
       <section>
