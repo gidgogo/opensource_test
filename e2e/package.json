@@ -1,0 +1,13 @@
+{
+  "name": "e2e",
+  "private": true,
+  "type": "module",
+  "description": "두 사람 동시 사용 자동 확인 (Playwright)",
+  "scripts": {
+    "build": "node e2e.mjs e2e build",
+    "check": "node e2e.mjs e2e check"
+  },
+  "dependencies": {
+    "playwright": "^1.64.1"
+  }
+}

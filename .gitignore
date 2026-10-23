@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.venv/
+__pycache__/
+.pytest_cache/
+*.tsbuildinfo
+.env
+.DS_Store
+# 실행하면 생기는 데이터 (각자 컴퓨터에만 둔다)
+server/app.db
+server/uploads/
+sync/data/
