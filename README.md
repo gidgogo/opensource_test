@@ -43,6 +43,8 @@ brew install node python@3.13
 ```
 
 - Node.js 22 이상, Python 3.11 이상이 필요합니다. (Mac 기본 `python3`은 3.9라서 안 됩니다. 아래처럼 `python3.13`을 쓰세요.)
+- brew가 없으면 설치 파일로 받아도 됩니다: [python.org](https://www.python.org/downloads/) 3.13 macOS installer, [nodejs.org](https://nodejs.org) LTS.
+- 기본 3.9와 새 3.13은 이름이 달라서 같이 깔려 있어도 괜찮습니다. 이 프로젝트는 `server/.venv` 안에서만 돌아갑니다.
 
 ### 2. 설치 (한 번만)
 
